@@ -1,0 +1,127 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mouse-power-analyzer"
+version = "1.0.0"
+description = "無線滑鼠耗電分析工具 - 分析不同發光模式下的功耗特性"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Mouse Power Analysis Team"},
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: System :: Hardware",
+]
+requires-python = ">=3.7"
+dependencies = [
+    "pandas>=1.3.0",
+    "numpy>=1.20.0",
+    "matplotlib>=3.3.0",
+    "seaborn>=0.11.0",
+    "scipy>=1.7.0",
+    "openpyxl>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "black>=21.0",
+    "flake8>=3.8",
+    "mypy>=0.800",
+]
+gui = [
+    "tkinter",
+]
+web = [
+    "streamlit>=1.28.0",
+    "plotly>=5.0.0",
+    "streamlit-option-menu>=0.3.0",
+]
+all = [
+    "streamlit>=1.28.0",
+    "plotly>=5.0.0",
+    "streamlit-option-menu>=0.3.0",
+    "tkinter",
+]
+
+[project.scripts]
+mouse-analyzer = "mouse_power_analyzer.cli:main"
+mouse-analyzer-gui = "mouse_power_analyzer.gui:main"
+
+[project.urls]
+Homepage = "https://github.com/your-username/mouse-power-analyzer"
+Repository = "https://github.com/your-username/mouse-power-analyzer.git"
+Documentation = "https://github.com/your-username/mouse-power-analyzer/blob/main/README.md"
+"Bug Tracker" = "https://github.com/your-username/mouse-power-analyzer/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mouse_power_analyzer = ["data/*.csv", "templates/*.html"]
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "matplotlib.*",
+    "seaborn.*",
+    "pandas.*",
+    "numpy.*",
+    "scipy.*",
+    "openpyxl.*",
+]
+ignore_missing_imports = true

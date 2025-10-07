@@ -1,0 +1,38 @@
+# Include documentation
+include README.md
+include LICENSE
+include CHANGELOG.md
+recursive-include docs *.md *.rst *.txt
+
+# Include configuration files
+include pyproject.toml
+include setup.py
+include requirements.txt
+include Makefile
+
+# Include scripts
+recursive-include scripts *.py *.bat *.sh
+
+# Include examples
+recursive-include examples *.py *.csv *.md
+
+# Include tests
+recursive-include tests *.py
+
+# Include data files
+recursive-include src/mouse_power_analyzer/data *.csv
+recursive-include src/mouse_power_analyzer/templates *.html
+
+# Exclude unwanted files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .git*
+global-exclude .DS_Store
+global-exclude *.so
+global-exclude *.egg-info
+prune build
+prune dist
+prune .pytest_cache
+prune .mypy_cache
