@@ -1,123 +1,67 @@
-# Mouse Power Analyzer Makefile
+# Makefile for Mouse Power Analyzer
 
-.PHONY: help install install-dev test lint format clean build upload docs run-gui run-cli
+.PHONY: help install install-dev test lint format clean build upload quick run-gui run-web
 
-# 預設目標
-help:
-	@echo "Mouse Power Analyzer - 無線滑鼠耗電分析工具"
-	@echo ""
-	@echo "可用的命令:"
-	@echo "  install      安裝套件"
-	@echo "  install-dev  安裝開發依賴"
-	@echo "  test         執行測試"
-	@echo "  lint         程式碼檢查"
-	@echo "  format       程式碼格式化"
-	@echo "  clean        清理建置檔案"
-	@echo "  build        建置套件"
-	@echo "  upload       上傳到PyPI"
-	@echo "  docs         生成文檔"
-	@echo "  run-gui      啟動GUI介面"
-	@echo "  run-web      啟動Web介面 (推薦)"
-	@echo "  run-cli      執行命令列分析"
-	@echo "  quick        快速分析database目錄"
+help:  ## 顯示幫助訊息
+	@echo "可用的命令："
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-# 安裝
-install:
+install:  ## 安裝套件
+	pip install -r requirements.txt
 	pip install -e .
 
-install-dev:
-	pip install -e ".[dev,gui]"
+install-dev:  ## 安裝開發環境
+	pip install -r requirements.txt
+	pip install -e ".[dev,web]"
+	pip install pytest pytest-cov black flake8 mypy
 
-# 測試
-test:
-	python -m pytest tests/ -v
+test:  ## 執行測試
+	python -m pytest tests/ -v --cov=src/mouse_power_analyzer --cov-report=html --cov-report=term
 
-test-cov:
-	python -m pytest tests/ --cov=src/mouse_power_analyzer --cov-report=html
+lint:  ## 程式碼檢查
+	flake8 src/ tests/ --max-line-length=88 --extend-ignore=E203,W503
+	mypy src/mouse_power_analyzer --ignore-missing-imports
 
-# 程式碼品質
-lint:
-	flake8 src/ tests/
-	mypy src/
+format:  ## 格式化程式碼
+	black src/ tests/ scripts/ --line-length=88
+	isort src/ tests/ scripts/ --profile=black
 
-format:
-	black src/ tests/
-
-format-check:
-	black --check src/ tests/
-
-# 清理
-clean:
-	rm -rf build/
-	rm -rf dist/
-	rm -rf *.egg-info/
-	rm -rf .pytest_cache/
-	rm -rf .coverage
-	rm -rf htmlcov/
-	find . -type d -name __pycache__ -exec rm -rf {} +
+clean:  ## 清理暫存檔案
 	find . -type f -name "*.pyc" -delete
+	find . -type d -name "__pycache__" -delete
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	rm -rf build/ dist/ .coverage htmlcov/ .pytest_cache/ .mypy_cache/
 
-# 建置和發布
-build: clean
+build:  ## 建置套件
 	python -m build
 
-upload: build
+upload:  ## 上傳到PyPI (需要先設定token)
 	python -m twine upload dist/*
 
-upload-test: build
-	python -m twine upload --repository testpypi dist/*
-
-# 文檔
-docs:
-	@echo "生成API文檔..."
-	# 這裡可以添加文檔生成命令
-
-# 執行
-run-gui:
-	python scripts/run_gui.py
-
-run-web:
-	python scripts/run_streamlit.py
-
-run-cli:
-	python -m mouse_power_analyzer.cli --help
-
-quick:
+quick:  ## 快速分析
 	python scripts/quick_start.py
 
-# 開發工具
-dev-setup: install-dev
-	@echo "開發環境設定完成"
+run-gui:  ## 啟動GUI介面
+	python scripts/run_gui.py
 
-check-all: format-check lint test
-	@echo "所有檢查通過"
+run-web:  ## 啟動Web介面
+	streamlit run src/mouse_power_analyzer/streamlit_app.py
 
-# 範例
-example:
-	python examples/example_usage.py
+demo:  ## 執行示範
+	@echo "=== 無線滑鼠耗電分析工具示範 ==="
+	@echo "1. 快速分析..."
+	python scripts/quick_start.py
+	@echo "2. 啟動Web介面..."
+	@echo "請在瀏覽器中開啟 http://localhost:8501"
+	streamlit run src/mouse_power_analyzer/streamlit_app.py
 
-# 資料庫分析
-analyze-database:
-	python -m mouse_power_analyzer.cli -d database -o analysis_results
-
-# 單檔分析範例
-analyze-single:
-	python -m mouse_power_analyzer.cli database/MD103\ Flash\ 2025-10-02\ 0.csv -o single_analysis
-
-# 安裝系統依賴（Ubuntu/Debian）
-install-system-deps:
-	sudo apt-get update
-	sudo apt-get install python3-tk python3-dev
-
-# 安裝系統依賴（macOS）
-install-system-deps-mac:
-	brew install python-tk
-
-# 檢查系統需求
-check-system:
-	@echo "檢查Python版本..."
-	python --version
-	@echo "檢查套件..."
-	python -c "import pandas, numpy, matplotlib; print('核心套件正常')"
-	@echo "檢查GUI支援..."
-	python -c "import tkinter; print('GUI支援正常')" || echo "警告：GUI不支援"
+check:  ## 檢查專案狀態
+	@echo "=== 專案檢查 ==="
+	@echo "Python版本:"
+	@python --version
+	@echo "套件狀態:"
+	@pip list | grep -E "(pandas|numpy|matplotlib|streamlit)"
+	@echo "檔案結構:"
+	@find . -name "*.py" | head -10
+	@echo "測試檔案:"
+	@find tests/ -name "*.py" 2>/dev/null || echo "無測試檔案"

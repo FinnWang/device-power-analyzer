@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Setup script for Mouse Power Analysis Tool
+Setup script for mouse-power-analyzer
 """
 
 from setuptools import setup, find_packages
-import os
+from pathlib import Path
 
-# Read README file
-def read_readme():
-    with open("README.md", "r", encoding="utf-8") as fh:
-        return fh.read()
+# 讀取README檔案
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text(encoding='utf-8')
 
-# Read requirements
-def read_requirements():
-    with open("requirements.txt", "r", encoding="utf-8") as fh:
-        return [line.strip() for line in fh if line.strip() and not line.startswith("#")]
+# 讀取requirements
+requirements = []
+with open('requirements.txt', 'r', encoding='utf-8') as f:
+    requirements = [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 setup(
     name="mouse-power-analyzer",
@@ -23,9 +22,14 @@ setup(
     author="Mouse Power Analysis Team",
     author_email="",
     description="無線滑鼠耗電分析工具 - 分析不同發光模式下的功耗特性",
-    long_description=read_readme(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/your-username/mouse-power-analyzer",
+    project_urls={
+        "Bug Tracker": "https://github.com/your-username/mouse-power-analyzer/issues",
+        "Documentation": "https://github.com/your-username/mouse-power-analyzer/blob/main/README.md",
+        "Source Code": "https://github.com/your-username/mouse-power-analyzer",
+    },
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     classifiers=[
@@ -44,7 +48,7 @@ setup(
         "Topic :: System :: Hardware",
     ],
     python_requires=">=3.7",
-    install_requires=read_requirements(),
+    install_requires=requirements,
     extras_require={
         "dev": [
             "pytest>=6.0",
@@ -54,7 +58,12 @@ setup(
             "mypy>=0.800",
         ],
         "gui": [
-            "tkinter",
+            # tkinter通常是內建的，但在某些系統上可能需要單獨安裝
+        ],
+        "web": [
+            "streamlit>=1.28.0",
+            "plotly>=5.0.0",
+            "streamlit-option-menu>=0.3.0",
         ],
     },
     entry_points={

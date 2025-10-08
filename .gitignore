@@ -142,3 +142,16 @@ Thumbs.db
 *.temp
 temp/
 tmp/
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# GitHub Actions
+.github/
