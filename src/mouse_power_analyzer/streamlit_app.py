@@ -222,10 +222,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown("""
-    這個工具可以幫你分析無線滑鼠在不同發光模式下的耗電情況。
-    只需要上傳CSV檔案，就能獲得詳細的分析報告和視覺化圖表。
-    """)
+    st.markdown("📊 **分析滑鼠耗電模式** | 上傳CSV檔案，獲得詳細報告和圖表")
     
     # 顯示記憶體警告（如果需要）
     display_memory_warning()
@@ -237,38 +234,36 @@ def main():
     
     # 側邊欄 - 檔案上傳和設定
     with st.sidebar:
-        st.header("📁 檔案上傳")
+        st.header("📁 上傳")
         
         # 檔案上傳
         uploaded_files = st.file_uploader(
-            "選擇CSV檔案",
+            "CSV檔案",
             type=['csv'],
             accept_multiple_files=True,
-            help="可以同時上傳多個CSV檔案進行比較分析"
+            help="支援多檔案比較"
         )
         
         # 分析模式選擇
-        st.header("🔧 分析模式")
+        st.header("🔧 模式")
         
         analysis_mode = st.selectbox(
-            "選擇分析模式",
+            "分析類型",
             ["完整分析", "時間區間分析", "結果比較", "結果管理"],
-            index=0 if st.session_state.analysis_mode == "完整分析" else 1,
-            help="選擇要進行的分析類型"
+            index=0 if st.session_state.analysis_mode == "完整分析" else 1
         )
         
         st.session_state.analysis_mode = analysis_mode
         
         # 分析設定
-        st.header("⚙️ 分析設定")
+        st.header("⚙️ 設定")
         
         battery_capacity = st.number_input(
             "電池容量 (mAh)",
             min_value=100,
             max_value=5000,
             value=1000,
-            step=100,
-            help="用於計算電池續航時間"
+            step=100
         )
         
         battery_voltage = st.number_input(
@@ -276,21 +271,20 @@ def main():
             min_value=1.0,
             max_value=5.0,
             value=3.7,
-            step=0.1,
-            help="電池的標準電壓"
+            step=0.1
         )
         
         # 圖表設定
-        st.header("📊 圖表設定")
+        st.header("📊 圖表")
         
         chart_theme = st.selectbox(
-            "圖表主題",
-            ["plotly", "plotly_white", "plotly_dark", "ggplot2", "seaborn"],
-            index=1
+            "主題",
+            ["plotly_white", "plotly_dark", "plotly", "ggplot2", "seaborn"],
+            index=0
         )
         
-        show_statistics = st.checkbox("顯示統計摘要", value=True)
-        show_comparison = st.checkbox("顯示比較分析", value=True)
+        show_statistics = st.checkbox("統計摘要", value=True)
+        show_comparison = st.checkbox("比較分析", value=True)
         
         # 效能設定
         st.header("⚡ 效能設定")
@@ -1494,65 +1488,54 @@ def export_time_range_results(results):
 def display_welcome_page():
     """顯示歡迎頁面"""
     
-    st.header("👋 歡迎使用無線滑鼠耗電分析工具")
+    st.header("👋 開始分析")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         st.markdown("""
-        ### 🚀 快速開始
+        ### 🚀 使用步驟
         
-        1. **上傳檔案**: 在左側邊欄選擇一個或多個CSV檔案
-        2. **選擇分析模式**: 選擇完整分析或時間區間分析
-        3. **設定參數**: 調整電池容量和電壓設定
-        4. **查看結果**: 系統會自動分析並顯示結果
+        1. **上傳CSV檔案** → 左側邊欄選擇檔案
+        2. **選擇分析模式** → 完整分析或時間區間分析  
+        3. **查看結果** → 自動生成圖表和統計
         
-        ### 📊 功能特色
+        ### ✨ 主要功能
         
-        - **自動模式識別**: 自動識別無燈光、呼吸燈、彩色循環、閃爍模式
-        - **互動式圖表**: 使用Plotly提供豐富的互動體驗
-        - **時間區間分析**: 選擇特定時間範圍進行精確分析
-        - **即時預覽**: 時間區間選擇時提供即時統計預覽
-        - **多結果比較**: 支援多個時間區間分析結果的比較
-        - **結果管理**: 完整的分析結果儲存、管理和匯出功能
-        - **報告匯出**: 可下載詳細的分析報告（JSON、CSV、Markdown格式）
+        - 🔍 **自動識別模式** - 無燈光、呼吸燈、彩色循環、閃爍
+        - 📊 **互動式圖表** - 豐富的視覺化分析
+        - ⏱️ **時間區間分析** - 精確選擇分析範圍
+        - 📋 **結果比較** - 多檔案/多區間比較
+        - 💾 **報告匯出** - JSON、CSV、Markdown格式
         
-        ### 📁 檔案格式要求
+        ### 📁 檔案格式
         
-        CSV檔案應包含以下欄位：
-        - Time: 時間戳記（秒）
-        - Voltage: 電壓（伏特）
-        - Current: 電流（安培）
-        - Power: 功率（瓦特）
+        需包含欄位：Time, Voltage, Current, Power
         """)
     
     with col2:
         st.info("""
-        💡 **小提示**
+        💡 **提示**
         
-        - 可以同時上傳多個檔案進行比較
-        - 系統會自動從檔名識別模式
-        - 所有圖表都支援縮放和互動
-        - 分析結果可以下載保存
-        - 時間區間分析支援精確的時間選擇
+        • 支援多檔案比較
+        • 自動識別模式
+        • 圖表可縮放互動
+        • 結果可下載
         """)
         
         st.success("""
-        ✅ **支援的模式**
+        ✅ **支援模式**
         
-        - 無燈光 (Nolight)
-        - 呼吸燈 (Breath)
-        - 彩色循環 (Colorcycle)
-        - 閃爍 (Flash)
+        • 無燈光 (Nolight)
+        • 呼吸燈 (Breath)  
+        • 彩色循環 (Colorcycle)
+        • 閃爍 (Flash)
         """)
         
-        # 安全和隱私提醒
-        st.warning("""
-        🔒 **隱私保護**
+        st.info("""
+        🔒 **隱私**
         
-        - 所有資料僅在您的瀏覽器中處理
-        - 不會上傳到任何伺服器
-        - 關閉瀏覽器後資料會自動清除
+        資料僅在瀏覽器處理
         """)
     
     # 顯示使用者指引（如果啟用）
