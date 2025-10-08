@@ -194,6 +194,34 @@ def main():
     
     # 標題和說明
     st.title("🖱️ 無線滑鼠耗電分析工具")
+    
+    # 帥氣的簽名
+    st.markdown("""
+    <div style="text-align: right; margin-top: -20px; margin-bottom: 20px;">
+        <span style="
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FFEAA7);
+            background-size: 300% 300%;
+            animation: gradient 3s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+        ">
+            > Forged by Finn ⚡
+        </span>
+    </div>
+    <style>
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     st.markdown("""
     這個工具可以幫你分析無線滑鼠在不同發光模式下的耗電情況。
     只需要上傳CSV檔案，就能獲得詳細的分析報告和視覺化圖表。
@@ -355,6 +383,21 @@ def main():
     else:
         # 顯示範例和說明
         display_welcome_page()
+    
+    # 頁腳簽名
+    st.markdown("---")
+    st.markdown("""
+    <div style="text-align: center; margin-top: 50px; margin-bottom: 20px;">
+        <span style="
+            color: #666;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        ">
+            ⚡ Forged by Finn | 2025 ⚡
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
 @st.cache_data(show_spinner=False)
 def load_and_process_csv(file_content, filename):
