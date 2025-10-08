@@ -26,12 +26,15 @@ __description__ = "無線滑鼠耗電分析工具"
 # 匯入主要類別
 from .analyzer import MousePowerAnalyzer
 from .visualizer import PowerVisualizer
+from .time_range_analyzer import TimeRangeAnalyzer, TimeRangeInfo
 from .utils import load_csv_file, calculate_battery_life
 
 # 定義公開的API
 __all__ = [
     "MousePowerAnalyzer",
-    "PowerVisualizer", 
+    "PowerVisualizer",
+    "TimeRangeAnalyzer",
+    "TimeRangeInfo",
     "load_csv_file",
     "calculate_battery_life",
     "__version__",

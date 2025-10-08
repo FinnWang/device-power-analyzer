@@ -63,7 +63,7 @@ def detect_mode_from_filename(filename: str) -> str:
         return 'Unknown'
 
 
-def calculate_battery_life(avg_power_W: float, battery_capacity_mAh: int = 1000, voltage: float = 3.7) -> Dict:
+def calculate_battery_life(avg_power_W: float, battery_capacity_mAh: int = 1000, voltage: float = 3.7, time_range_info: Dict = None) -> Dict:
     """
     估算電池續航時間
     
@@ -71,6 +71,7 @@ def calculate_battery_life(avg_power_W: float, battery_capacity_mAh: int = 1000,
         avg_power_W: 平均功率 (瓦特)
         battery_capacity_mAh: 電池容量 (毫安時)
         voltage: 電池電壓 (伏特)
+        time_range_info: 時間範圍資訊字典
         
     Returns:
         續航時間估算字典
@@ -81,18 +82,35 @@ def calculate_battery_life(avg_power_W: float, battery_capacity_mAh: int = 1000,
         hours = battery_energy_J / (avg_power_W * 3600)
         days = hours / 24
         
-        return {
+        result = {
             'hours': hours,
             'days': days,
             'battery_capacity_mAh': battery_capacity_mAh,
-            'voltage': voltage
+            'voltage': voltage,
+            'avg_power_W': avg_power_W
         }
+        
+        # 添加時間範圍相關資訊
+        if time_range_info is not None:
+            result['time_range_analysis'] = {
+                'is_partial_analysis': time_range_info.get('is_partial_analysis', False),
+                'analysis_duration': time_range_info.get('selected_duration', 0),
+                'start_time': time_range_info.get('start_time', 0),
+                'end_time': time_range_info.get('end_time', 0)
+            }
+            
+            # 如果是部分分析，添加警告說明
+            if time_range_info.get('is_partial_analysis', False):
+                result['analysis_note'] = f"基於 {time_range_info.get('selected_duration', 0):.1f} 秒時間區間的分析結果"
+        
+        return result
     else:
         return {
             'hours': float('inf'), 
             'days': float('inf'),
             'battery_capacity_mAh': battery_capacity_mAh,
-            'voltage': voltage
+            'voltage': voltage,
+            'avg_power_W': avg_power_W
         }
 
 

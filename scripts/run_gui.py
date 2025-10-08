@@ -57,7 +57,6 @@ def main():
     
     # 導入並啟動GUI
     try:
-        import sys
         sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
         
         from mouse_power_analyzer.gui import main as gui_main

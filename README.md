@@ -1,6 +1,10 @@
-# 無線滑鼠耗電分析工具
+# 🖱️ 無線滑鼠耗電分析工具
 
-這是一個專門用於分析無線滑鼠在不同發光模式下耗電情況的Python工具集。
+[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Web%20App-red.svg)](https://streamlit.io/)
+
+這是一個專門用於分析無線滑鼠在不同發光模式下耗電情況的Python工具集，提供完整的GUI和Web介面。
 
 ## 功能特色
 
@@ -41,6 +45,24 @@ pip install -r requirements.txt
 - seaborn：統計視覺化
 - tkinter：GUI介面（通常內建）
 - openpyxl：Excel報告匯出
+
+## 🚀 快速開始
+
+### 最簡單的方式
+```bash
+# 1. 克隆專案
+git clone https://github.com/your-username/mouse-power-analyzer.git
+cd mouse-power-analyzer
+
+# 2. 安裝依賴
+pip install -r requirements.txt
+
+# 3. 快速分析（自動分析database目錄中的所有檔案）
+python scripts/quick_start.py
+
+# 4. 啟動Web介面
+streamlit run src/mouse_power_analyzer/streamlit_app.py
+```
 
 ## 使用方法
 
